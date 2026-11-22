@@ -9,8 +9,8 @@ const server = http.createServer((req, res) => {
   const urlPath = decodeURIComponent((req.url || '/').split('?')[0]);
 
   if (urlPath === '/' || urlPath === '') {
-    res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
-    res.end('Servidor Futuristic Arena rodando');
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+    fs.createReadStream(path.resolve(__dirname, 'Futuristic_Arena.html')).pipe(res);
     return;
   }
 
@@ -20,7 +20,12 @@ const server = http.createServer((req, res) => {
   for (const name of candidateNames) {
     const fullPath = path.resolve(__dirname, name);
     if (fullPath.startsWith(__dirname) && fs.existsSync(fullPath) && fs.statSync(fullPath).isFile()) {
-      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      const ext = path.extname(fullPath).toLowerCase();
+      let contentType = 'text/plain; charset=utf-8';
+      if (ext === '.html') contentType = 'text/html; charset=utf-8';
+      if (ext === '.js') contentType = 'application/javascript; charset=utf-8';
+      if (ext === '.css') contentType = 'text/css; charset=utf-8';
+      res.writeHead(200, { 'Content-Type': contentType });
       fs.createReadStream(fullPath).pipe(res);
       return;
     }
