@@ -2,15 +2,16 @@
 <html lang="de">
 <head><script>
 const firebaseConfig = {
-apiKey: "AIzaSyCQ7dxoatmTZ-AV3L23ISG1CUB4yQu6-mw",
-authDomain: "futuristic-arena.firebaseapp.com",
-projectId: "futuristic-arena",
-storageBucket: "futuristic-arena.firebasestorage.app",
-messagingSenderId: "327284033415",
-appId: "1:327284033415:web:001cc8f4477757ac133522",
-measurementId: "G-T2C2R5WDYP"
-}
-<script src="(https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js)"></script>
+  apiKey: "AIzaSyCQ7dxoatmTZ-AV3L23ISG1CUB4yQu6-mw",
+  authDomain: "futuristic-arena.firebaseapp.com",
+  projectId: "futuristic-arena",
+  storageBucket: "futuristic-arena.firebasestorage.app",
+  messagingSenderId: "327284033415",
+  appId: "1:327284033415:web:001cc8f4477757ac133522",
+  measurementId: "G-T2C2R5WDYP"
+};
+const app = firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Futuristic Arena</title>
@@ -1338,8 +1339,7 @@ signInWithPopup(auth, provider)
 .then((r) => console.log('Logado:', r.user))
 .catch((e) => console.error('Erro:', e));
 };
-}const app = firebase.initializeApp(FIREBASE_CONFIG);
-const auth = firebase.auth();
+}
 }, 500);
  $('ps').value=Math.round((CFG.psens||1)*100);$('xv7').textContent=$('ps').value;$('ps').oninput=e=>{CFG.psens=e.target.value/100;$('xv7').textContent=e.target.value;save()}}
 addEventListener('gamepadconnected',()=>{say(A('padOn'));setTimeout(padUI,200)});addEventListener('gamepaddisconnected',()=>setTimeout(padUI,200));padUI();
