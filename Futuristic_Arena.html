@@ -1338,7 +1338,8 @@ signInWithPopup(auth, provider)
 .then((r) => console.log('Logado:', r.user))
 .catch((e) => console.error('Erro:', e));
 };
-}
+}const app = firebase.initializeApp(FIREBASE_CONFIG);
+const auth = firebase.auth();
 }, 500);
  $('ps').value=Math.round((CFG.psens||1)*100);$('xv7').textContent=$('ps').value;$('ps').oninput=e=>{CFG.psens=e.target.value/100;$('xv7').textContent=e.target.value;save()}}
 addEventListener('gamepadconnected',()=>{say(A('padOn'));setTimeout(padUI,200)});addEventListener('gamepaddisconnected',()=>setTimeout(padUI,200));padUI();
