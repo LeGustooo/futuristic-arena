@@ -1,17 +1,6 @@
 <!DOCTYPE html>
 <html lang="de">
-<head><script>
-const firebaseConfig = {
-  apiKey: "AIzaSyCQ7dxoatmTZ-AV3L23ISG1CUB4yQu6-mw",
-  authDomain: "futuristic-arena.firebaseapp.com",
-  projectId: "futuristic-arena",
-  storageBucket: "futuristic-arena.firebasestorage.app",
-  messagingSenderId: "327284033415",
-  appId: "1:327284033415:web:001cc8f4477757ac133522",
-  measurementId: "G-T2C2R5WDYP"
-};
-const app = firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Futuristic Arena</title>
@@ -952,7 +941,7 @@ function srvDir(onList,url){const R={mq:true,alive:true,ok:false,ws:null};
  R.open();return R}
 if(!Array.isArray(CFG.friends))CFG.friends=[];
 var ACC={logged:false,name:'',code:'',friends:[],room:'',msg:'',ws:null,bus:null,stat:{},ok:false};
-const accMode=()=>srvUrl()?'server':'guest',ACCT='futarena/v1/';
+const accMode=()=>window.FBON?'fb':srvUrl()?'server':'guest',ACCT='futarena/v1/';
 function gidGet(){let g='';try{g=localStorage.getItem('fa_gid')||''}catch(e){}if(!/^\d{6}$/.test(g)){g=String(100000+Math.floor(Math.random()*900000));try{localStorage.setItem('fa_gid',g)}catch(e){}}return g}
 const tokGet=()=>{try{return localStorage.getItem('fa_tok')||''}catch(e){return''}},tokSet=t=>{try{t?localStorage.setItem('fa_tok',t):localStorage.removeItem('fa_tok')}catch(e){}};
 function mqBus(onMsg){
@@ -1351,4 +1340,131 @@ function applyLang(){document.documentElement.lang=lang;document.querySelector('
  langUI();renderBinds();renderPadBinds();regUI();preUI();skinUI();xUI();padUI();musUI();lgbUI();vsbUI();fpsUI();gfxUI();hhUI();nameUI();homeUI();gmodeUI();modeUI();groupUI();memUI.s='';memUI();$('go').textContent=A(started?'resume':'play')}
 applyLang();
 addEventListener('resize',rs);rs();setBs();requestAnimationFrame(loop);
-</script></body></html>
+</script><!-- =====================================================================
+  FIREBASE-KONTO (Zusatzblock für Futuristic Arena)
+  EINFÜGEN: direkt VOR der letzten Zeile </body> deiner Spiel-Datei.
+  Dieser Block ändert dein Spiel nicht, er ergänzt nur den KONTO-Tab.
+  Anmeldung: Google, Apple, Gast (anonym), E-Mail + Passwort, Telefon (SMS)
+===================================================================== -->
+<style>
+input[type=password]{width:100%;box-sizing:border-box;padding:11px;border-radius:6px;border:1px solid #00e5ff66;background:#050818;color:#fff;font:700 16px Rajdhani,sans-serif}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script>
+(function(){
+ if(!window.firebase||typeof FIREBASE_CONFIG==='undefined')return;
+
+ // ---------- Texte (en / de / pt, andere Sprachen fallen auf Englisch zurück) ----------
+ const T={
+ en:{fbEmail:"E-MAIL",fbGoogle:"Continue with Google",fbApple:"Continue with Apple",fbGuest:"Play as guest",fbPhone:"PHONE (with country code)",fbSend:"SEND CODE",fbVerify:"CONFIRM",fbReset:"Forgot password?",fbResetOk:"Reset e-mail sent.",fbSent:"Code sent by SMS.",fbGuestName:"Guest",
+  fbE_cred:"Wrong e-mail or password",fbE_inuse:"E-mail already in use",fbE_weak:"Password too weak (min. 6 characters)",fbE_mail:"Invalid e-mail address",fbE_pop:"Sign-in window was closed or blocked",fbE_net:"No connection",fbE_phone:"Invalid phone number (use +country code)",fbE_code:"Wrong or expired code",fbE_many:"Too many attempts. Try again later",fbE_noprov:"This login method is not enabled in the Firebase console",fbE_domain:"Domain not authorized in Firebase (Authentication > Settings > Authorized domains)",fbE_file:"Login does not work from a local file. Open the game via https:// or localhost",fbE_gen:"Login failed"},
+ de:{fbEmail:"E-MAIL",fbGoogle:"Weiter mit Google",fbApple:"Weiter mit Apple",fbGuest:"Als Gast spielen",fbPhone:"TELEFON (mit Ländervorwahl)",fbSend:"CODE SENDEN",fbVerify:"BESTÄTIGEN",fbReset:"Passwort vergessen?",fbResetOk:"E-Mail zum Zurücksetzen gesendet.",fbSent:"Code per SMS gesendet.",fbGuestName:"Gast",
+  fbE_cred:"E-Mail oder Passwort falsch",fbE_inuse:"E-Mail wird schon verwendet",fbE_weak:"Passwort zu schwach (mind. 6 Zeichen)",fbE_mail:"Ungültige E-Mail-Adresse",fbE_pop:"Anmeldefenster wurde geschlossen oder blockiert",fbE_net:"Keine Verbindung",fbE_phone:"Ungültige Nummer (mit +Ländervorwahl)",fbE_code:"Code falsch oder abgelaufen",fbE_many:"Zu viele Versuche. Später erneut versuchen",fbE_noprov:"Diese Anmeldeart ist in der Firebase-Konsole nicht aktiviert",fbE_domain:"Domain in Firebase nicht freigegeben (Authentication > Einstellungen > Autorisierte Domains)",fbE_file:"Anmeldung geht nicht aus einer lokalen Datei. Öffne das Spiel über https:// oder localhost",fbE_gen:"Anmeldung fehlgeschlagen"},
+ pt:{fbEmail:"E-MAIL",fbGoogle:"Continuar com Google",fbApple:"Continuar com Apple",fbGuest:"Jogar como convidado",fbPhone:"TELEFONE (com código do país)",fbSend:"ENVIAR CÓDIGO",fbVerify:"CONFIRMAR",fbReset:"Esqueci a senha",fbResetOk:"E-mail de redefinição enviado.",fbSent:"Código enviado por SMS.",fbGuestName:"Convidado",
+  fbE_cred:"E-mail ou senha incorretos",fbE_inuse:"E-mail já está em uso",fbE_weak:"Senha fraca demais (mín. 6 caracteres)",fbE_mail:"E-mail inválido",fbE_pop:"A janela de login foi fechada ou bloqueada",fbE_net:"Sem conexão",fbE_phone:"Número inválido (use +código do país)",fbE_code:"Código errado ou expirado",fbE_many:"Muitas tentativas. Tente de novo mais tarde",fbE_noprov:"Este método de login não está ativado no console do Firebase",fbE_domain:"Domínio não autorizado no Firebase (Authentication > Configurações > Domínios autorizados)",fbE_file:"O login não funciona num arquivo local. Abra o jogo por https:// ou localhost",fbE_gen:"Falha no login"}};
+ for(const l in L)Object.assign(L[l],T.en,T[l]||{});
+
+ // ---------- Firebase starten ----------
+ let auth;
+ try{firebase.initializeApp(FIREBASE_CONFIG);auth=firebase.auth();auth.useDeviceLanguage()}catch(e){console.error('Firebase init',e);return}
+ window.FBON=true;
+ const FB={user:null,code:'',msg:''};
+ if(location.protocol==='file:')FB.msg=A('fbE_file');
+
+ const lab=u=>(u.displayName||(u.email?u.email.split('@')[0]:'')||(u.phoneNumber?'...'+u.phoneNumber.slice(-4):'')||A('fbGuestName')).slice(0,20);
+ const fbCode=uid=>{let h=2166136261;for(let i=0;i<uid.length;i++){h^=uid.charCodeAt(i);h=Math.imul(h,16777619)}return String(100000+((h>>>0)%900000))};
+ const ERR={'auth/invalid-credential':'cred','auth/wrong-password':'cred','auth/user-not-found':'cred','auth/invalid-login-credentials':'cred','auth/email-already-in-use':'inuse','auth/weak-password':'weak','auth/invalid-email':'mail','auth/missing-email':'mail','auth/popup-closed-by-user':'pop','auth/cancelled-popup-request':'pop','auth/popup-blocked':'pop','auth/network-request-failed':'net','auth/invalid-phone-number':'phone','auth/missing-phone-number':'phone','auth/invalid-verification-code':'code','auth/missing-verification-code':'code','auth/code-expired':'code','auth/too-many-requests':'many','auth/operation-not-allowed':'noprov','auth/admin-restricted-operation':'noprov','auth/unauthorized-domain':'domain','auth/operation-not-supported-in-this-environment':'file'};
+ const err=e=>{const c=(e&&e.code)||'',m=ERR[c]||'gen';return A('fbE_'+m)+(m==='gen'&&c?' ('+c+')':'')};
+ const msg=t=>{FB.msg=t||'';accUI()};
+ const run=f=>async()=>{msg('');try{await f()}catch(e){console.error(e);msg(err(e))}};
+
+ // ---------- Oberfläche in den KONTO-Tab einfügen ----------
+ const box=document.createElement('div');box.id='acFbL';box.style.display='none';
+ box.innerHTML=
+ '<button class="pb" id="fbG" style="width:100%;margin-top:8px" data-i="fbGoogle"></button>'+
+ '<button class="pb" id="fbA" style="width:100%;margin-top:6px" data-i="fbApple"></button>'+
+ '<button class="pb" id="fbN" style="width:100%;margin-top:6px" data-i="fbGuest"></button>'+
+ '<label data-i="fbEmail"></label><input type="text" id="fbem" maxlength="120" autocomplete="email" inputmode="email">'+
+ '<label data-i="accPass"></label><input type="password" id="fbpw" maxlength="60" autocomplete="current-password">'+
+ '<div class="row" style="margin-top:8px"><button class="pb" id="fbli" style="flex:1" data-i="accLogin"></button><button class="pb" id="fbre" style="flex:1" data-i="accReg"></button></div>'+
+ '<button class="pb" id="fbrs" style="width:100%;margin-top:6px" data-i="fbReset"></button>'+
+ '<label data-i="fbPhone"></label><div class="row"><input type="text" id="fbph" maxlength="20" inputmode="tel" autocomplete="tel" placeholder="+49 151 2345678"><button class="pb" id="fbps" data-i="fbSend"></button></div>'+
+ '<div class="row" id="fbcr" style="margin-top:6px;display:none"><input type="text" id="fbcd" maxlength="6" inputmode="numeric" placeholder="123456"><button class="pb" id="fbcv" data-i="fbVerify"></button></div>'+
+ '<div id="fbrc" style="margin-top:8px"></div>';
+ $('acMe').parentNode.insertBefore(box,$('acMe'));
+ // Tasten im Formular dürfen keine Spiel-Aktionen auslösen (z. B. M = Musik)
+ box.querySelectorAll('input').forEach(i=>i.addEventListener('keydown',e=>{e.stopPropagation();if(e.key==='Enter'){e.preventDefault();if(i.id==='fbpw'||i.id==='fbem')$('fbli').click();else if(i.id==='fbph')$('fbps').click();else if(i.id==='fbcd')$('fbcv').click()}}));
+
+ // ---------- Anmeldearten ----------
+ async function social(n){
+  let p;if(n==='g')p=new firebase.auth.GoogleAuthProvider();else{p=new firebase.auth.OAuthProvider('apple.com');p.addScope('email');p.addScope('name')}
+  const u=auth.currentUser;
+  try{if(u&&u.isAnonymous)await u.linkWithPopup(p);else await auth.signInWithPopup(p)}
+  catch(e){
+   if(e.code==='auth/popup-blocked'){if(u&&u.isAnonymous)await u.linkWithRedirect(p);else await auth.signInWithRedirect(p);return}
+   if(e.code==='auth/credential-already-in-use'&&e.credential){await auth.signInWithCredential(e.credential);return}
+   throw e}
+  setUser(auth.currentUser)}
+ async function mail(reg){
+  const em=$('fbem').value.trim(),pw=$('fbpw').value,u=auth.currentUser;
+  if(reg){if(u&&u.isAnonymous)await u.linkWithCredential(firebase.auth.EmailAuthProvider.credential(em,pw));else await auth.createUserWithEmailAndPassword(em,pw)}
+  else await auth.signInWithEmailAndPassword(em,pw);
+  setUser(auth.currentUser)}
+ let conf=null,rec=null;
+ async function sendCode(){
+  const num=$('fbph').value.replace(/[\s()-]/g,''),u=auth.currentUser;
+  if(!rec)rec=new firebase.auth.RecaptchaVerifier('fbrc',{size:'invisible'});
+  try{conf=u&&u.isAnonymous?await u.linkWithPhoneNumber(num,rec):await auth.signInWithPhoneNumber(num,rec)}
+  catch(e){try{rec.clear()}catch(x){}rec=null;throw e}
+  $('fbcr').style.display='flex';msg(A('fbSent'))}
+ async function verify(){
+  if(!conf)return;
+  try{await conf.confirm($('fbcd').value.trim())}
+  catch(e){if(e.code==='auth/credential-already-in-use'&&e.credential)await auth.signInWithCredential(e.credential);else throw e}
+  conf=null;$('fbcr').style.display='none';$('fbcd').value='';setUser(auth.currentUser)}
+ $('fbG').onclick=run(()=>social('g'));
+ $('fbA').onclick=run(()=>social('a'));
+ $('fbN').onclick=run(async()=>{await auth.signInAnonymously()});
+ $('fbli').onclick=run(()=>mail(false));
+ $('fbre').onclick=run(()=>mail(true));
+ $('fbrs').onclick=run(async()=>{await auth.sendPasswordResetEmail($('fbem').value.trim());msg(A('fbResetOk'))});
+ $('fbps').onclick=run(sendCode);
+ $('fbcv').onclick=run(verify);
+ $('aco').onclick=()=>{auth.signOut().catch(()=>{})};
+
+ // ---------- Benutzer gewechselt ----------
+ function setUser(u){
+  FB.user=u||null;
+  if(ACC.bus){ACC.bus.alive=false;try{ACC.bus.ws&&ACC.bus.ws.close()}catch(e){}ACC.bus=null;clearInterval(ACC.pt)}
+  ACC.stat={};
+  if(u){
+   FB.code=fbCode(u.uid);ACC.code=FB.code;ACC.logged=true;ACC.name=lab(u);FB.msg='';
+   try{if(/^Spieler\d+$/.test(CFG.name||'')&&!u.isAnonymous){const nm=lab(u).replace(/[^\p{L}\p{N} _.-]/gu,'').slice(0,14);if(nm.length>=2){CFG.name=nm;P.name=nm;$('nm').value=nm;draw(P);save()}}}catch(e){}
+   accEnsure()}
+  else{FB.code='';ACC.code='';ACC.logged=false;ACC.name=''}
+  try{homeUI()}catch(e){}
+  accUI()}
+
+ // ---------- bestehende Konto-Funktionen des Spiels erweitern ----------
+ const _ui=accUI,_en=accEnsure,_gid=gidGet;
+ gidGet=function(){return FB.user&&FB.code?FB.code:_gid()};
+ accEnsure=function(){if(!FB.user){accUI();return}_en()};
+ function paint(){
+  if(!$('t8'))return;
+  $('acLogin').style.display='none';
+  const out=!FB.user;
+  $('acFbL').style.display=out?'':'none';
+  if(out){$('acMe').style.display='none';$('acFr').style.display='none';$('aco').style.display='none';$('acWho').textContent=''}
+  else{$('aco').style.display='';$('acWho').textContent=A('accIn').replace('{n}',lab(FB.user))}
+  $('acm').textContent=FB.msg||(FB.user?A('accSrvH'):'');
+ }
+ accUI=function(){_ui();paint()};
+
+ auth.getRedirectResult().catch(e=>msg(err(e)));
+ auth.onAuthStateChanged(setUser);
+ applyLang();
+})();
+</script>
+
+</body></html>
